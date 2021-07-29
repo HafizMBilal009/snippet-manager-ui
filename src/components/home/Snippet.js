@@ -16,12 +16,14 @@ const Snippet = ({
   setSnippetId,
 }) => {
   const deleteSnippet = () => {
-    request({
-      url: `${domain}/snippet/${_id}`,
-      method: 'DELETE',
-    }).then(() => {
-      getSnippets();
-    });
+    if (window.confirm('Do you want to delete this snippet')) {
+      request({
+        url: `${domain}/snippet/${_id}`,
+        method: 'DELETE',
+      }).then(() => {
+        getSnippets();
+      });
+    }
   };
   const populateData = () => {
     setSaveSnippetType('update');

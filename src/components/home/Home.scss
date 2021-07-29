@@ -28,4 +28,12 @@
     font-weight: bold;
     margin-top: 2rem;
   }
+  .home-loader-container {
+    display: grid;
+    place-items: center;
+    .loader {
+      width: 80px;
+      height: 80px;
+    }
+  }
 }

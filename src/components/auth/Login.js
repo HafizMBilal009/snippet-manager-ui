@@ -4,16 +4,18 @@ import { Link, useHistory } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import domain from '../../domain/domain';
 import ErrorMessage from '../misc/ErrorMessage';
+import Loader from '../misc/Loader';
 import './AuthForm.scss';
 const Login = () => {
   const [formEmail, setFormEmail] = useState('');
   const [formPassword, setFormPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
-
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
   const { getUser } = useContext(UserContext);
   const { push } = useHistory();
   const login = (e) => {
     e.preventDefault();
+    setIsLoaderVisible(true);
     request({
       method: 'POST',
       url: `${domain}/auth/login`,
@@ -23,6 +25,7 @@ const Login = () => {
       },
     })
       .then(() => {
+        setIsLoaderVisible(false);
         getUser();
         push('/');
       })
@@ -32,6 +35,7 @@ const Login = () => {
             data: { errorMessage },
           },
         }) => {
+          setIsLoaderVisible(false);
           setErrorMessage(errorMessage);
         }
       );
@@ -61,9 +65,13 @@ const Login = () => {
           onChange={(e) => setFormPassword(e.target.value)}
         />
 
-        <button className='btn-submit' type='submit'>
-          Log in
-        </button>
+        {isLoaderVisible ? (
+          <Loader />
+        ) : (
+          <button className='btn-submit' type='submit'>
+            Log in
+          </button>
+        )}
       </form>
       <p>
         Don't have an account yet? <Link to='/signup'>Register here</Link>

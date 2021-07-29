@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { request } from 'axios';
 import './SnippetEditor.scss';
 import ErrorMessage from '../misc/ErrorMessage';
+import Loader from '../misc/Loader';
 import domain from '../../domain/domain';
 const SnipperEditor = ({
   getSnippets,
@@ -16,9 +17,11 @@ const SnipperEditor = ({
   saveSnippetType,
 }) => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
 
   const saveSnippet = (e) => {
     e.preventDefault();
+    setIsLoaderVisible(true);
     const snippet = {
       title: editorTitle,
       description: editorDescription,
@@ -31,6 +34,7 @@ const SnipperEditor = ({
         data: snippet,
       })
         .then(() => {
+          setIsLoaderVisible(false);
           getSnippets();
           closeEditor();
         })
@@ -40,6 +44,7 @@ const SnipperEditor = ({
               data: { errorMessage },
             },
           }) => {
+            setIsLoaderVisible(false);
             setErrorMessage(errorMessage);
           }
         );
@@ -50,6 +55,7 @@ const SnipperEditor = ({
         data: snippet,
       })
         .then(() => {
+          setIsLoaderVisible(false);
           getSnippets();
           closeEditor();
         })
@@ -59,6 +65,7 @@ const SnipperEditor = ({
               data: { errorMessage },
             },
           }) => {
+            setIsLoaderVisible(false);
             setErrorMessage(errorMessage);
           }
         );
@@ -99,12 +106,18 @@ const SnipperEditor = ({
           value={editorCode}
           onChange={(e) => setEditorCode(e.target.value)}
         />
-        <button type='submit' className='btn-save' onClick={saveSnippet}>
-          Save
-        </button>
-        <button className='btn-cancel' onClick={() => closeEditor()}>
-          Cancel
-        </button>
+        {isLoaderVisible ? (
+          <Loader />
+        ) : (
+          <>
+            <button type='submit' className='btn-save' onClick={saveSnippet}>
+              Save
+            </button>
+            <button className='btn-cancel' onClick={() => closeEditor()}>
+              Cancel
+            </button>
+          </>
+        )}
       </form>
     </div>
   );

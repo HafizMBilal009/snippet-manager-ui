@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import domain from '../../domain/domain';
 import ErrorMessage from '../misc/ErrorMessage';
+import Loader from '../misc/Loader';
 import './AuthForm.scss';
 
 const Register = () => {
@@ -11,6 +12,7 @@ const Register = () => {
   const [formPassword, setFormPassword] = useState('');
   const [formVerifyPassword, setFormVerifyPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
 
   const { getUser } = useContext(UserContext);
 
@@ -18,6 +20,7 @@ const Register = () => {
 
   const registerUser = (e) => {
     e.preventDefault();
+    setIsLoaderVisible(true);
     request({
       method: 'POST',
       url: `${domain}/auth`,
@@ -28,6 +31,7 @@ const Register = () => {
       },
     })
       .then(() => {
+        setIsLoaderVisible(false);
         getUser();
         push('/');
       })
@@ -37,6 +41,7 @@ const Register = () => {
             data: { errorMessage },
           },
         }) => {
+          setIsLoaderVisible(false);
           setErrorMessage(errorMessage);
         }
       );
@@ -72,9 +77,13 @@ const Register = () => {
           value={formVerifyPassword}
           onChange={(e) => setFormVerifyPassword(e.target.value)}
         />
-        <button className='btn-submit' type='submit'>
-          Register
-        </button>
+        {isLoaderVisible ? (
+          <Loader />
+        ) : (
+          <button className='btn-submit' type='submit'>
+            Register
+          </button>
+        )}
       </form>
       <p>
         Already have an account? <Link to='/login'>Login instead</Link>

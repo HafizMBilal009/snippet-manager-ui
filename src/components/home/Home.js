@@ -6,6 +6,7 @@ import './Home.scss';
 import UserContext from '../../context/UserContext';
 import { Link } from 'react-router-dom';
 import domain from '../../domain/domain';
+import Loader from '../misc/Loader';
 const Home = () => {
   const [snippets, setSnippets] = useState([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -14,13 +15,21 @@ const Home = () => {
   const [editorDescription, setEditorDescription] = useState('');
   const [editorCode, setEditorCode] = useState('');
   const [saveSnippetType, setSaveSnippetType] = useState('add');
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
 
   const { user } = useContext(UserContext);
-  const getSnippets = () =>
-    request({
+  const getSnippets = () => {
+    setIsLoaderVisible(true);
+    return request({
       method: 'GET',
       url: `${domain}/snippet`,
-    }).then(({ data }) => setSnippets(data));
+    })
+      .then(({ data }) => {
+        setSnippets(data);
+        setIsLoaderVisible(false);
+      })
+      .catch(() => setIsLoaderVisible(false));
+  };
 
   const renderSnippets = () => {
     let sortedSnippets = [...snippets];
@@ -73,11 +82,20 @@ const Home = () => {
           snippetId={snippetId}
         />
       )}
-      {snippets?.length > 0
-        ? renderSnippets()
-        : user && (
-            <p className='no-snippets'>No snippets have been added yet.</p>
-          )}
+      {isLoaderVisible ? (
+        <div className='home-loader-container'>
+          <Loader />
+        </div>
+      ) : (
+        <>
+          {snippets?.length > 0
+            ? renderSnippets()
+            : user && (
+                <p className='no-snippets'>No snippets have been added yet.</p>
+              )}
+        </>
+      )}
+
       {user === null && (
         <div className='no-user-message'>
           <h2>Welcome to Snippet Manager</h2>
