@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { request } from 'axios';
 import './SnippetEditor.scss';
 import ErrorMessage from '../misc/ErrorMessage';
+import domain from '../../domain/domain';
 const SnipperEditor = ({
   getSnippets,
   setIsEditorOpen,
@@ -26,7 +27,7 @@ const SnipperEditor = ({
     if (saveSnippetType === 'add') {
       request({
         method: 'POST',
-        url: 'http://localhost:5000/snippet',
+        url: `${domain}/snippet`,
         data: snippet,
       })
         .then(() => {
@@ -45,7 +46,7 @@ const SnipperEditor = ({
     } else {
       request({
         method: 'PUT',
-        url: `http://localhost:5000/snippet/${snippetId}`,
+        url: `${domain}/snippet/${snippetId}`,
         data: snippet,
       })
         .then(() => {

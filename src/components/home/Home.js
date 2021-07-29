@@ -5,6 +5,7 @@ import Snippet from './Snippet';
 import './Home.scss';
 import UserContext from '../../context/UserContext';
 import { Link } from 'react-router-dom';
+import domain from '../../domain/domain';
 const Home = () => {
   const [snippets, setSnippets] = useState([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -18,7 +19,7 @@ const Home = () => {
   const getSnippets = () =>
     request({
       method: 'GET',
-      url: 'http://localhost:5000/snippet',
+      url: `${domain}/snippet`,
     }).then(({ data }) => setSnippets(data));
 
   const renderSnippets = () => {

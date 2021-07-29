@@ -2,6 +2,7 @@ import { request } from 'axios';
 import React, { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
+import domain from '../../domain/domain';
 import ErrorMessage from '../misc/ErrorMessage';
 import './AuthForm.scss';
 
@@ -19,7 +20,7 @@ const Register = () => {
     e.preventDefault();
     request({
       method: 'POST',
-      url: 'http://localhost:5000/auth',
+      url: `${domain}/auth`,
       data: {
         email: formEmail,
         passwordHash: formPassword,

@@ -1,5 +1,6 @@
 import { request } from 'axios';
 import React from 'react';
+import domain from '../../domain/domain';
 import './Snippet.scss';
 const Snippet = ({
   snippet: { _id, title, description, code },
@@ -16,7 +17,7 @@ const Snippet = ({
 }) => {
   const deleteSnippet = () => {
     request({
-      url: `http://localhost:5000/snippet/${_id}`,
+      url: `${domain}/snippet/${_id}`,
       method: 'DELETE',
     }).then(() => {
       getSnippets();

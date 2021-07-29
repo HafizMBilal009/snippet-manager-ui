@@ -1,11 +1,12 @@
 import { request } from 'axios';
 import React, { createContext, useEffect, useState } from 'react';
+import domain from '../domain/domain';
 const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(undefined);
   const getUser = () =>
     request({
-      url: 'http://localhost:5000/auth/loggedIn',
+      url: `${domain}/auth/loggedIn`,
       method: 'GET',
     })
       .then(({ data }) => {
